@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { abi } from "./abi.json";
+import { abi as erc20abi } from "./abi_erc20.json";
 import { useToken } from "./TokenContext";
 import { useEthersSigner } from "./ethers";
 import BeatLoader from "react-spinners/BeatLoader";
+
 const CONTRACT_ADDRESS = "0x2271bFd83468efD38C60b9e4Ef335B920Faa9400";
+
 const BuyToken = () => {
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
   const [hash, setHash] = useState("");
+  const [balance, setBalance] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { tokenAddress } = useToken();
   const signer = useEthersSigner();
@@ -18,6 +22,21 @@ const BuyToken = () => {
       setAddress(tokenAddress);
     }
   }, [tokenAddress]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchBalance(address);
+    };
+    fetchData();
+  }, [address]);
+
+  const fetchBalance = async (_address) => {
+    if (_address && ethers.utils.isAddress(_address)) {
+      const tokenContract = new ethers.Contract(_address, erc20abi, signer);
+      const balanceOf = await tokenContract.balanceOf(signer.address);
+      setBalance(balanceOf.toString());
+    }
+  };
 
   return (
     <div>
@@ -51,6 +70,7 @@ const BuyToken = () => {
         {isLoading ? <BeatLoader size={10} color={"#fff"} /> : "Buy"}
       </button>
       {hash && <p>Hash: {hash}</p>}
+      {balance && <p>Balance: {balance}</p>}
     </div>
   );
 };
