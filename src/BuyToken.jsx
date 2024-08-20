@@ -31,10 +31,11 @@ const BuyToken = () => {
   }, [address]);
 
   const fetchBalance = async (_address) => {
+    console.log(signer)
     if (_address && ethers.utils.isAddress(_address)) {
       const tokenContract = new ethers.Contract(_address, erc20abi, signer);
-      const balanceOf = await tokenContract.balanceOf(signer.address);
-      setBalance(balanceOf.toString());
+      const balanceOf = await tokenContract.balanceOf(signer._address);
+      setBalance((balanceOf/10**18).toString());
     }
   };
 
@@ -70,7 +71,7 @@ const BuyToken = () => {
         {isLoading ? <BeatLoader size={10} color={"#fff"} /> : "Buy"}
       </button>
       {hash && <p>Hash: {hash}</p>}
-      {balance && <p>Balance: {balance}</p>}
+      {balance && <p>Your Balance: {balance}</p>}
     </div>
   );
 };
