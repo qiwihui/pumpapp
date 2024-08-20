@@ -1,49 +1,10 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center horizontally */
+  align-items: center;
 }
 
 h1 {
@@ -122,14 +83,48 @@ button:hover {
 .progress-text {
   font-size: 16px;
   font-weight: bold;
-}
-
-.progress-text {
   position: absolute; /* Absolute positioning */
   top: 62%; /* Center vertically */
   left: 50%; /* Center horizontally */
   transform: translate(-50%, -50%); /* Adjust for the text size */
   color: #000; /* Text color */
-  font-weight: bold;
   pointer-events: none; /* Prevent text from capturing pointer events */
+}
+
+/* Media query for mobile devices */
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  .section-container {
+    min-width: 100%; /* Adjust width for mobile */
+    gap: 15px; /* Adjust gap for mobile */
+  }
+
+  .section {
+    padding: 15px;
+  }
+
+  input {
+    width: 100%; /* Full width on mobile */
+  }
+
+  button {
+    width: 100%; /* Full width on mobile */
+    padding: 12px 0; /* Adjust padding for mobile */
+  }
+
+  .progress-container {
+    width: 100%; /* Full width on mobile */
+    padding: 10px;
+  }
+
+  .progress-bar {
+    width: 100%; /* Full width on mobile */
+  }
+
+  h1 {
+    font-size: 1.5rem; /* Adjust font size for mobile */
+  }
 }
