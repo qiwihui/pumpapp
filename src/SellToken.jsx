@@ -42,7 +42,7 @@ const SellToken = () => {
             abi,
             signer
           );
-          const tx = await contract.sell(address, amount);
+          const tx = await contract.sell(address, ethers.utils.parseUnits(amount, "ether"));
           setHash(tx.hash);
           const receipt = await tx.wait();
           // console.log(receipt);

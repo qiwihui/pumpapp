@@ -8,6 +8,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 import CONFIG from "./config";
 
 const BuyToken = () => {
+  const [totalSupply, setTotalSupply] = useState(0);
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
   const [hash, setHash] = useState("");
@@ -30,17 +31,44 @@ const BuyToken = () => {
   }, [address]);
 
   const fetchBalance = async (_address) => {
-    console.log(signer)
     if (_address && ethers.utils.isAddress(_address)) {
       const tokenContract = new ethers.Contract(_address, erc20abi, signer);
       const balanceOf = await tokenContract.balanceOf(signer._address);
-      setBalance((balanceOf/10**18).toString());
+      setBalance((balanceOf / 10 ** 18).toString());
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      if (address && ethers.utils.isAddress(address)) {
+        await fetchTokenSupply(address);
+      }
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [address]);
+
+  const fetchTokenSupply = async (_address) => {
+    if (_address && ethers.utils.isAddress(_address)) {
+      const tokenContract = new ethers.Contract(_address, erc20abi, signer);
+      const ts = await tokenContract.totalSupply();
+      setTotalSupply(Math.round(ts / 10 ** 18).toString());
     }
   };
 
   return (
     <div>
       <h3>Buy Token</h3>
+      <div>
+        <progress
+          className="progress-bar"
+          value={totalSupply}
+          max={1000000000}
+        ></progress>
+        <div className="progress-text">
+          {Math.round(parseInt(totalSupply, 10) / 10000000)}%
+        </div>
+      </div>
       <input
         type="text"
         placeholder="Token Address"
@@ -49,19 +77,24 @@ const BuyToken = () => {
       />
       <input
         type="text"
-        placeholder="Amount"
+        placeholder="ETH amount, e.g. 0.1"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
       />
       <button
         onClick={async () => {
           setIsLoading(true);
-          const contract = new ethers.Contract(CONFIG.CONTRACT_ADDRESS, abi, signer);
+          const contract = new ethers.Contract(
+            CONFIG.CONTRACT_ADDRESS,
+            abi,
+            signer
+          );
           const tx = await contract.buy(address, {
             value: ethers.utils.parseUnits(amount, "ether"),
           });
           setHash(tx.hash);
           const receipt = await tx.wait();
+          await fetchBalance(address);
           // console.log(receipt);
           setIsLoading(false);
         }}
