@@ -3,10 +3,9 @@ import { ethers } from "ethers";
 import { useAccount, useDisconnect } from "wagmi";
 import { abi } from "./abi.json"; // Add the ABI here
 import { useEthersSigner } from "./ethers";
-import { useToken } from './TokenContext';
+import { useToken } from "./TokenContext";
 import BeatLoader from "react-spinners/BeatLoader";
-
-const CONTRACT_ADDRESS = "0x2271bFd83468efD38C60b9e4Ef335B920Faa9400";
+import CONFIG from "./config";
 
 const CreateToken = () => {
   const [tokenName, setTokenName] = useState("");
@@ -15,7 +14,7 @@ const CreateToken = () => {
   const { tokenAddress, setTokenAddress } = useToken();
 
   const signer = useEthersSigner();
-  const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+  const contract = new ethers.Contract(CONFIG.CONTRACT_ADDRESS, abi, signer);
 
   return (
     <div>
@@ -39,11 +38,11 @@ const CreateToken = () => {
           // setDepositHash(tx.hash);
           const receipt = await tx.wait();
           //setTokenAddress
-          const tokenCreatedEvents= receipt.events.filter(event => {
-            return event.event === 'TokenCreated'
-          })
+          const tokenCreatedEvents = receipt.events.filter((event) => {
+            return event.event === "TokenCreated";
+          });
           if (tokenCreatedEvents.length > 0) {
-            setTokenAddress(tokenCreatedEvents[0].args[0])
+            setTokenAddress(tokenCreatedEvents[0].args[0]);
           }
           setIsLoading(false);
         }}

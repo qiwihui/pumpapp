@@ -5,8 +5,7 @@ import { abi as erc20abi } from "./abi_erc20.json";
 import { useToken } from "./TokenContext";
 import { useEthersSigner } from "./ethers";
 import BeatLoader from "react-spinners/BeatLoader";
-
-const CONTRACT_ADDRESS = "0x2271bFd83468efD38C60b9e4Ef335B920Faa9400";
+import CONFIG from "./config";
 
 const BuyToken = () => {
   const [amount, setAmount] = useState("");
@@ -57,7 +56,7 @@ const BuyToken = () => {
       <button
         onClick={async () => {
           setIsLoading(true);
-          const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+          const contract = new ethers.Contract(CONFIG.CONTRACT_ADDRESS, abi, signer);
           const tx = await contract.buy(address, {
             value: ethers.utils.parseUnits(amount, "ether"),
           });

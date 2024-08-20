@@ -4,7 +4,8 @@ import { abi } from "./abi.json";
 import { useToken } from "./TokenContext";
 import { useEthersSigner } from "./ethers";
 import BeatLoader from "react-spinners/BeatLoader";
-const CONTRACT_ADDRESS = "0x2271bFd83468efD38C60b9e4Ef335B920Faa9400";
+import CONFIG from "./config";
+
 const SellToken = () => {
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
@@ -36,7 +37,11 @@ const SellToken = () => {
       <button
         onClick={async () => {
           setIsLoading(true);
-          const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+          const contract = new ethers.Contract(
+            CONFIG.CONTRACT_ADDRESS,
+            abi,
+            signer
+          );
           const tx = await contract.sell(address, amount);
           setHash(tx.hash);
           const receipt = await tx.wait();
